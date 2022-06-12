@@ -1,6 +1,8 @@
 
 
+import 'package:eeducation/DB/Basket.dart';
 import 'package:eeducation/Settings.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 
 class Baskets extends StatefulWidget {
@@ -12,8 +14,34 @@ class Baskets extends StatefulWidget {
 
 class _LessonsState extends State<Baskets> {
 
+  var refBasket=FirebaseDatabase(databaseURL: "https://e-education-46dea-default-rtdb.firebaseio.com").ref().child("Basket");
   var Dersler=["1","2","3","4","5"];
+  List<String> DerslerName =[];
+  List<String> DerslerPrice =[];
+  Future<void> tumSepet() async {
+    refBasket.onValue.listen((event) {
+      var gelenDegerler = event.snapshot.value as dynamic;
+      List<String> gelenName = [];
+      List<String> gelenPrice = [];
+      if (gelenDegerler != null) {
+        gelenDegerler.forEach((key, nesne) {
+          setState(() {
+            var gelenDers = Basket.fromJson(key, nesne);
+            print("********************");
+            gelenName.add(gelenDers.name);
+            gelenPrice.add(gelenDers.price);
+          });
+        });
+        DerslerName = gelenName;
+        DerslerPrice = gelenPrice;
+      }
+    });
+  }
 
+  @override
+  void initState() {
+    tumSepet();
+  }
   @override
 
   Widget build(BuildContext context) {
@@ -33,7 +61,7 @@ class _LessonsState extends State<Baskets> {
           crossAxisCount: 1,
           childAspectRatio: 2/1,
         ),
-        itemCount: Dersler.length,
+        itemCount: DerslerName.length,
         itemBuilder: (context,indeks){
           return Card(
             color: Color.fromRGBO(224, 224, 224, 1),
@@ -46,18 +74,13 @@ class _LessonsState extends State<Baskets> {
             child: Column(
               children: [
                 Container(
-                  child: Text("Ders Başlığı",style: TextStyle(
+                  child: Text("Dersin adı: ${DerslerName[indeks]}",style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 25,
                   ),),
                 ),
                 Container(
-                  child: Text("Öğretmen Adı:",style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                  ),),
-                ),
-                Container(
-                  child: Text("Ders Fiyatı:",style: TextStyle(
+                  child: Text("Ders fiyati: ${DerslerPrice[indeks]}₺",style: TextStyle(
                     fontWeight: FontWeight.bold,
                   ),),
                 ),

@@ -1,4 +1,10 @@
+import 'dart:collection';
+
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class ProfileSetting extends StatefulWidget {
   const ProfileSetting({Key? key}) : super(key: key);
@@ -8,6 +14,24 @@ class ProfileSetting extends StatefulWidget {
 }
 
 class _ProfileSettingState extends State<ProfileSetting> {
+
+  var tfName=TextEditingController();
+  var tfTc=TextEditingController();
+  var tfEmail=TextEditingController();
+  var tfPassword =TextEditingController();
+  var tfIban = TextEditingController();
+
+  var refUsers=FirebaseDatabase(databaseURL: "https://e-education-46dea-default-rtdb.firebaseio.com").ref().child("Users");
+
+  Future<void> kisiGuncelle(String name,String tc, String email, String password, String iban) async {
+    var bilgi = HashMap<String, dynamic>();
+    bilgi["name"] = name;
+    bilgi["tc"] = tc;
+    bilgi["email"] = email;
+    bilgi["password"] = password;
+    bilgi["iban"] = iban;
+    refUsers.child("userid").update(bilgi);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -37,6 +61,7 @@ class _ProfileSettingState extends State<ProfileSetting> {
                 border: Border.all(color: Colors.black)
             ),
             child: TextField(
+              controller: tfName,
               decoration: InputDecoration(
                 icon: Icon(Icons.abc),
                 border: InputBorder.none,
@@ -53,6 +78,7 @@ class _ProfileSettingState extends State<ProfileSetting> {
                 border: Border.all(color: Colors.black)
             ),
             child: TextField(
+              controller: tfTc,
               decoration: InputDecoration(
                 icon: Icon(Icons.password),
                 border: InputBorder.none,
@@ -69,6 +95,7 @@ class _ProfileSettingState extends State<ProfileSetting> {
                 border: Border.all(color: Colors.black)
             ),
             child: TextField(
+              controller: tfEmail,
               decoration: InputDecoration(
                 icon: Icon(Icons.mail),
                 border: InputBorder.none,
@@ -85,6 +112,7 @@ class _ProfileSettingState extends State<ProfileSetting> {
                 border: Border.all(color: Colors.black)
             ),
             child: TextField(
+              controller: tfPassword,
               obscureText: true,
               decoration: InputDecoration(
                 icon: Icon(Icons.password),
@@ -103,6 +131,7 @@ class _ProfileSettingState extends State<ProfileSetting> {
                   border: Border.all(color: Colors.black)
             ),
             child: TextField(
+              controller: tfIban,
               decoration: InputDecoration(
                 icon: Icon(Icons.credit_card),
                 border: InputBorder.none,
@@ -129,6 +158,7 @@ class _ProfileSettingState extends State<ProfileSetting> {
                 borderRadius: BorderRadius.all(Radius.circular(30)),
               ),
               onPressed: (){
+                kisiGuncelle(tfName.text, tfTc.text, tfEmail.text, tfPassword.text, tfIban.text);
               },
             ),
           ),

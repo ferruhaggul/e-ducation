@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "470613477478",
+    "firebase_url": "https://e-education-46dea-default-rtdb.firebaseio.com/",
+    "project_id": "e-education-46dea",
+    "storage_bucket": "e-education-46dea.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:470613477478:android:e09f36d0ccb11a2ec005a7",
+        "android_client_info": {
+          "package_name": "com.example.eeducation"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "470613477478-m6pk5rqnu8i06nbmiq9mb6l7t2451bko.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAdfLeKVAjdgC_Nrtc0zSZcGBP6OkzcSH0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "470613477478-m6pk5rqnu8i06nbmiq9mb6l7t2451bko.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

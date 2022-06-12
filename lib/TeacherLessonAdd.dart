@@ -1,4 +1,9 @@
+import 'dart:collection';
+
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+
+import 'LessonAdd.dart';
 
 class TeacherLessonAdd extends StatefulWidget {
   const TeacherLessonAdd({Key? key}) : super(key: key);
@@ -9,6 +14,31 @@ class TeacherLessonAdd extends StatefulWidget {
 
 class _TeacherLessonAddState extends State<TeacherLessonAdd> {
   late String _chosenValue;
+  var tfCategory=TextEditingController();
+  var tfName=TextEditingController();
+  var tfDescription=TextEditingController();
+  var tfPrice=TextEditingController();
+
+  var refUsers=FirebaseDatabase(databaseURL: "https://e-education-46dea-default-rtdb.firebaseio.com").ref().child("Lesson");
+
+  Future<void> DersEkle(String category,String name, String description, String price) async{
+    var bilgi=HashMap<String,dynamic>();
+    bilgi["category"]=category;
+    bilgi["name"]=name;
+    bilgi["description"]=description;
+    bilgi["price"]=price;
+    bilgi["pdf"]="";
+    bilgi["lessonid"]="";
+    refUsers.push().set(bilgi);
+
+
+    Navigator.push(context,MaterialPageRoute(builder: (context) => LessonAdd()));
+  }
+
+
+
+
+
   @override
   Widget build(BuildContext context) {
     var ekranBilgisi=MediaQuery.of(context);
@@ -32,22 +62,20 @@ class _TeacherLessonAddState extends State<TeacherLessonAdd> {
       body: Column(
         children: [
           Container(
-            width: ekranGenisligi/1.06,
-            height: ekranYuksekligi/12.5,
-            padding: EdgeInsets.only(left: ekranGenisligi/4),
-            margin: EdgeInsets.only(left: ekranGenisligi/28,top: ekranYuksekligi/45),
+            width: ekranGenisligi/1.09,
+            padding: EdgeInsets.fromLTRB(5,2,10,2),
+            margin: EdgeInsets.only(top: ekranYuksekligi/25,left: ekranGenisligi/35),
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(20),
-              border: Border.all(color: Colors.black),
+                borderRadius: BorderRadius.circular(5),
+                border: Border.all(color: Colors.black)
             ),
-            child: DropdownButton<String>(
-              value: SecilenItem,
-              items: items
-                  .map((item) =>DropdownMenuItem<String>(
-                value: item,
-                child: Text(item,style: TextStyle(fontSize: 24)),
-              )).toList(),
-              onChanged: (item) => setState(() => SecilenItem=item),
+            child: TextField(
+              controller: tfCategory,
+              decoration: InputDecoration(
+                icon: Icon(Icons.title_outlined),
+                border: InputBorder.none,
+                labelText: "Kategori",
+              ),
             ),
           ),
           Container(
@@ -59,6 +87,7 @@ class _TeacherLessonAddState extends State<TeacherLessonAdd> {
                 border: Border.all(color: Colors.black)
             ),
             child: TextField(
+              controller: tfName,
               decoration: InputDecoration(
                 icon: Icon(Icons.title_outlined),
                 border: InputBorder.none,
@@ -77,6 +106,7 @@ class _TeacherLessonAddState extends State<TeacherLessonAdd> {
                 border: Border.all(color: Colors.black)
             ),
             child: TextField(
+              controller: tfDescription,
               decoration: InputDecoration(
                 icon: Icon(Icons.description_outlined),
                 border: InputBorder.none,
@@ -93,6 +123,7 @@ class _TeacherLessonAddState extends State<TeacherLessonAdd> {
                 border: Border.all(color: Colors.black)
             ),
             child: TextField(
+              controller: tfPrice,
               decoration: InputDecoration(
                 icon: Icon(Icons.price_change_outlined),
                 border: InputBorder.none,
@@ -101,21 +132,12 @@ class _TeacherLessonAddState extends State<TeacherLessonAdd> {
             ),
           ),
           Container(
-            width: ekranGenisligi/1.09,
-            padding: EdgeInsets.fromLTRB(5,2,10,2),
-            margin: EdgeInsets.only(top: ekranYuksekligi/25,left: ekranGenisligi/35),
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(5),
-                border: Border.all(color: Colors.black)
+            width: ekranGenisligi/6,
+            height: ekranYuksekligi/14,
+            margin:EdgeInsets.only(top:ekranYuksekligi/28),
+            child: RaisedButton.icon(onPressed:() {}, icon: Icon(Icons.picture_as_pdf_sharp),color: Colors.redAccent,textColor: Colors.white, label: Text(""),),
+            color: Colors.redAccent,
             ),
-            child: TextField(
-              decoration: InputDecoration(
-                icon: Icon(Icons.picture_as_pdf_outlined),
-                border: InputBorder.none,
-                labelText: "PDF",
-              ),
-            ),
-          ),
           Container(
             width: ekranGenisligi/1.09,
             height: ekranYuksekligi/14,
@@ -134,6 +156,7 @@ class _TeacherLessonAddState extends State<TeacherLessonAdd> {
                 borderRadius: BorderRadius.all(Radius.circular(30)),
               ),
               onPressed: (){
+                DersEkle(tfCategory.text, tfName.text, tfDescription.text, tfPrice.text);
 
               },
             ),

@@ -1,10 +1,18 @@
 
+import 'dart:collection';
+
+import 'package:eeducation/DB/Users.dart';
 import 'package:eeducation/HomePage.dart';
 import 'package:eeducation/Lessons.dart';
 import 'package:eeducation/Signup.dart';
 import 'package:eeducation/main.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+
 
 class LogIn extends StatefulWidget {
 
@@ -16,6 +24,36 @@ class LogIn extends StatefulWidget {
 }
 
 class _LogInState extends State<LogIn> {
+
+  var tfEmail = TextEditingController();
+  var tfPassword = TextEditingController();
+
+  var refUsers = FirebaseDatabase(
+      databaseURL: "https://e-education-46dea-default-rtdb.firebaseio.com")
+      .ref()
+      .child("Users");
+
+
+  Future<void> girisYap() async {
+    var sorgu1= refUsers.orderByChild("email").equalTo(tfEmail.text);
+    var sorgu2= refUsers.orderByChild("password").equalTo(tfPassword.text);
+
+    sorgu1.onValue.listen((event) {
+      var gelenDegerler=event.snapshot.value;
+
+      if(gelenDegerler !=null){
+        sorgu2.onValue.listen((event) {
+          var gelenDegerler2=event.snapshot.value;
+          if(gelenDegerler2 != null){
+            Navigator.push(context, MaterialPageRoute(builder: (context) => HomePage()));
+          }
+        });
+      }
+    });
+  }
+
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -55,6 +93,7 @@ class _LogInState extends State<LogIn> {
                   border: Border.all(color: Colors.black)
               ),
               child: TextField(
+                controller: tfEmail,
                 decoration: InputDecoration(
                   icon: Icon(Icons.mail),
                   border: InputBorder.none,
@@ -71,6 +110,7 @@ class _LogInState extends State<LogIn> {
                   border: Border.all(color: Colors.black)
               ),
               child: TextField(
+                controller: tfPassword,
                 obscureText: true,
                 decoration: InputDecoration(
                   icon: Icon(Icons.password),
@@ -97,7 +137,7 @@ class _LogInState extends State<LogIn> {
                   borderRadius: BorderRadius.all(Radius.circular(30)),
                 ),
                 onPressed:(){
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => HomePage()));
+                  girisYap();
                 },
               ),
             ),
